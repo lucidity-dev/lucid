@@ -11,7 +11,3 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-bulletin
-examples/simple/simple
-examples/pubsub/pub/pub
-examples/pubsub/sub/sub

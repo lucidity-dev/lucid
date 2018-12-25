@@ -18,10 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package main
+package parser
 
-import "github.com/lucidity-dev/lucid/cmd"
+import (
+	"fmt"
+	"log"
+	"os"
 
-func main() {
-	cmd.Execute()
+	"gopkg.in/yaml.v2"
+)
+
+type Project struct {
+	Services []Service `yaml:"services"`
+}
+
+type Service struct {
+	Name        string   `yaml:"name"`
+	Src         string   `yaml:"src"`
+	Publishers  []string `yaml:"publishers"`
+	Subscribers []string `yaml:"subscribers"`
+	Build       string   `yaml:"build"`
+	Run         string   `yaml:"run"`
+}
+
+func ParseConfig(data []byte, file_type string) {
+	if file_type == "yaml" {
+		parseYaml(data)
+	}
+}
+
+func parseYaml(data []byte) {
+	fmt.Println(string(data))
+	p := Project{}
+	err := yaml.UnmarshalStrict(data, &p)
+	if err != nil {
+		log.Fatalf("Error: %v \n", err)
+		os.Exit(-1)
+	}
+
+	// TODO: Return project
+	for _, s := range p.Services {
+		fmt.Printf("service: \n %v \n", s)
+	}
 }

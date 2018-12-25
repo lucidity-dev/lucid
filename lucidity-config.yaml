@@ -1,0 +1,23 @@
+---
+services:
+- name: test
+  src: ./test-src
+  publishers:
+   - test-pub1
+   - test-pub2
+  subscribers:
+   - test-sub1
+   - test-sub2
+  build: go build main.go
+  run: go run main
+
+- name: test1
+  src: ./test1-src
+  publishers:
+   - test1-pub1
+   - test1-pub2
+  subscribers:
+   - test1-sub1
+   - test1-sub2
+  build: go build main.go
+  run: go run main

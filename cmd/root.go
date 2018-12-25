@@ -22,10 +22,12 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 
+	"github.com/lucidity-dev/lucid/parser"
 	"github.com/spf13/cobra"
-	//"github.com/spf13/viper"
 )
 
 var cfgFile string
@@ -44,12 +46,15 @@ to quickly create a Cobra application.`,
 }
 
 func lucidRun(cmd *cobra.Command, args []string) {
-	_, err := os.Open("lucidity-config.yaml")
+	file, err := os.Open("lucidity-config.yaml")
 	if err != nil {
-		os.Stderr.WriteString("Error: can't find lucidity-config.yaml in this directory.\n")
+		log.Fatalf("Error: can't find lucidity-config.yaml in this directory.\n")
 		os.Exit(-1)
 	}
+	data, _ := ioutil.ReadAll(file)
 	fmt.Println("building ... ...")
+	parser.ParseConfig(data, "yaml")
+	//TODO: add build project function into a separate library
 }
 
 func Execute() {

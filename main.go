@@ -20,8 +20,65 @@
 
 package main
 
-import "github.com/lucidity-dev/lucid/cmd"
+import (
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/lucidity-dev/lucid/cmd"
+
+	"nanomsg.org/go-mangos/protocol/req"
+	"nanomsg.org/go-mangos/transport/tcp"
+
+	"github.com/golang/protobuf/proto"
+	pb "github.com/lucidity-dev/bulletin/protobuf"
+)
+
+func cleanup() {
+	fmt.Println("test")
+	url := "tcp://127.0.0.1:40899"
+	server, err := req.NewSocket()
+	if err != nil {
+		log.Fatalf("Error: %v \n", err)
+		os.Exit(1)
+	}
+
+	server.AddTransport(tcp.NewTransport())
+	if err = server.Dial(url); err != nil {
+		log.Fatalf("Error: %v \n", err)
+	}
+	request := &pb.Message{
+		Cmd:  pb.Message_FLUSH_ALL,
+		Args: "",
+	}
+
+	data, err := proto.Marshal(request)
+
+	if err != nil {
+		log.Fatalf("Error: %v \n", err)
+	}
+
+	if err = server.Send(data); err != nil {
+		log.Fatalf("Error: %v \n", err)
+		os.Exit(1)
+	}
+
+	if _, err = server.Recv(); err != nil {
+		log.Fatalf("Error: %v \n", err)
+		os.Exit(1)
+	}
+
+}
 
 func main() {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+	go func() {
+		<-c
+		cleanup()
+		os.Exit(1)
+	}()
 	cmd.Execute()
 }

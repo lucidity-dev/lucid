@@ -1,7 +1,7 @@
 # lucid
 A build tool for a lucidity robotics project.
 
-## Running Locally
+## Building Locally
 Install Dependencies
 ```
 make deps

@@ -62,10 +62,10 @@ func BuildProject(project parser.Project) {
 		registerPublishers(service.Publishers)
 	}
 
-	//fmt.Println("Starting Services: ")
-	//for _, service := range project.Services {
-	//	startService(service.Src, service.Run)
-	//}
+	fmt.Println("Starting Services: ")
+	for _, service := range project.Services {
+		startService(service.Src, service.Run)
+	}
 }
 
 func registerPublishers(topics []string) {
@@ -108,11 +108,13 @@ func registerPublisher(topic string) {
 }
 
 func startService(dir string, run string) {
+	fmt.Println(run)
 	run_cmd := strings.Fields(run)
 	run = run_cmd[0]
 	cmd := exec.Command(run, run_cmd[1:]...)
 	cmd.Dir = dir
 	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 	err := cmd.Start()
 	//err := cmd.Run()
 	if err != nil {

@@ -6,8 +6,15 @@ Install Dependencies
 ```
 make deps
 ```
-Building and Running
+Building
 ```
-make run
+make build
+```
+
+## Running Example
+Make sure [bulletin](https://github.com/lucidity-dev/bulletin) and memcached are already running.
+```
+cd example
+./../lucid
 ```
 

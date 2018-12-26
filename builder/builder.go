@@ -17,58 +17,34 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-
-package cmd
+package builder
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
+	"strings"
 
-	"github.com/lucidity-dev/lucid/builder"
 	"github.com/lucidity-dev/lucid/parser"
-	"github.com/spf13/cobra"
 )
 
-var cfgFile string
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "lucid",
-	Short: "A build tool for lucidity project",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: lucidRun,
+func BuildProject(project parser.Project) {
+	fmt.Println("Starting Services: ")
+	for _, service := range project.Services {
+		startService(service.Src, service.Run)
+	}
 }
 
-func lucidRun(cmd *cobra.Command, args []string) {
-	file, err := os.Open("lucidity-config.yaml")
+func startService(dir string, run string) {
+	run_cmd := strings.Fields(run)
+	run = run_cmd[0]
+	cmd := exec.Command(run, run_cmd[1:]...)
+	cmd.Dir = dir
+	cmd.Stdout = os.Stdout
+	err := cmd.Start()
+	//err := cmd.Run()
 	if err != nil {
-		log.Fatalf("Error: can't find lucidity-config.yaml in this directory.\n")
-		os.Exit(-1)
+		log.Fatalf("Error: %v \n", err)
 	}
-	data, _ := ioutil.ReadAll(file)
-	fmt.Println("building ... ...")
-	proj, _ := parser.ParseConfig(data, "yaml")
-
-	builder.BuildProject(proj)
-	for 1 == 1 {
-	}
-	//TODO: add build project function into a separate library
-}
-
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-}
-
-func init() {
-	// add flags here
 }

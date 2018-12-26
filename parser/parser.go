@@ -21,6 +21,7 @@
 package parser
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -41,13 +42,15 @@ type Service struct {
 	Run         string   `yaml:"run"`
 }
 
-func ParseConfig(data []byte, file_type string) {
+func ParseConfig(data []byte, file_type string) (Project, error) {
 	if file_type == "yaml" {
-		parseYaml(data)
+		return parseYaml(data), nil
 	}
+
+	return Project{}, errors.New("Not a valid file type.")
 }
 
-func parseYaml(data []byte) {
+func parseYaml(data []byte) Project {
 	fmt.Println(string(data))
 	p := Project{}
 	err := yaml.UnmarshalStrict(data, &p)
@@ -55,9 +58,5 @@ func parseYaml(data []byte) {
 		log.Fatalf("Error: %v \n", err)
 		os.Exit(-1)
 	}
-
-	// TODO: Return project
-	for _, s := range p.Services {
-		fmt.Printf("service: \n %v \n", s)
-	}
+	return p
 }

@@ -4,20 +4,16 @@ services:
   src: ./test-src
   publishers:
    - test-pub1
-   - test-pub2
   subscribers:
-   - test-sub1
-   - test-sub2
+   - test1-pub1
   build: go build main.go
-  run: go run main
+  run: go run main.go
 
 - name: test1
   src: ./test1-src
   publishers:
    - test1-pub1
-   - test1-pub2
   subscribers:
-   - test1-sub1
-   - test1-sub2
+   - test-pub1
   build: go build main.go
-  run: go run main
+  run: go run main.go

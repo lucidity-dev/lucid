@@ -55,11 +55,11 @@ func lucidRun(cmd *cobra.Command, args []string) {
 	data, _ := ioutil.ReadAll(file)
 	fmt.Println("building ... ...")
 	proj, _ := parser.ParseConfig(data, "yaml")
-
 	builder.BuildProject(proj)
+
+	// keep parent process alive so STDOUT looks right
 	for 1 == 1 {
 	}
-	//TODO: add build project function into a separate library
 }
 
 func Execute() {

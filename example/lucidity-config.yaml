@@ -17,3 +17,12 @@ services:
    - test-pub1
   build: go build main.go
   run: go run main.go
+
+- name: test2
+  src: ./test_with_golib-src
+  publishers:
+   - test2-pub
+  subscribers:
+   - test1-pub1
+  build: go build main.go
+  run: go run main.go

@@ -21,7 +21,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -37,7 +36,6 @@ import (
 )
 
 func cleanup() {
-	fmt.Println("test")
 	url := "tcp://127.0.0.1:40899"
 	server, err := req.NewSocket()
 	if err != nil {

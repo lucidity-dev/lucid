@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/lucidity-dev/luciditygo/lucidity"
+	"github.com/lucidity-dev/lucidity-go/lucidity"
 
 	"nanomsg.org/go-mangos"
 )
